@@ -17,13 +17,13 @@
         "sourceLineageTag": "[generic].[CalendarDates]",
         "columns": [
           {
-            "name": "CalendarDate",
-            "dataType": "dateTime",
-            "sourceColumn": "CalendarDate",
-            "formatString": "General Date",
-            "sourceProviderType": "date",
-            "sourceLineageTag": "CalendarDate",
-            "summarizeBy": "none",
+            "name": "A",
+            "dataType": "int64",
+            "sourceColumn": "A",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "A",
+            "summarizeBy": "sum",
             "annotations": [
               {
                 "name": "SummarizationSetBy",

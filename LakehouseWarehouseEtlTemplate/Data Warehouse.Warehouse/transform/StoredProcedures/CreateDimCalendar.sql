@@ -1,7 +1,7 @@
 CREATE PROC transform.CreateDimCalendar
 AS
     TRUNCATE TABLE dbo.Dim_Calendar
-
+/*
     DECLARE @StartDate  date = DATEFROMPARTS(YEAR(GETDATE()) - 3, 01, 01)
 
     DECLARE @CutoffDate date = DATEADD(mm, 6, GETDATE())--DATEADD(DAY, -1, DATEADD(YEAR, 30, @StartDate))
@@ -214,3 +214,4 @@ AS
         Style120
 
     FROM dim
+    */
