@@ -1,0 +1,320 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource"
+          },
+          "datasetSettings": {
+            "type": "LakehouseTable",
+            "typeProperties": {
+              "table": "config_System1ExtractControl"
+            },
+            "schema": [],
+            "linkedService": {
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "dd4cbb4a-9806-4f8a-b0e3-cd39805491f1",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Tables"
+                },
+                "annotations": []
+              },
+              "name": "Raw_Data_Lakehouse"
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lookup System1 Config",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Lookup System1 Config').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "IfCondition",
+              "typeProperties": {
+                "expression": {
+                  "value": "@bool(item().Active)",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "AzureSqlSource",
+                        "sqlReaderQuery": {
+                          "value": "@item().SQLSelect",
+                          "type": "Expression"
+                        },
+                        "partitionOption": "None",
+                        "queryTimeout": "02:00:00",
+                        "additionalColumns": [
+                          {
+                            "name": "ExtractDateUTC",
+                            "value": {
+                              "value": "@utcnow()",
+                              "type": "Expression"
+                            }
+                          }
+                        ],
+                        "datasetSettings": {
+                          "type": "AzureSqlTable",
+                          "typeProperties": {
+                            "database": "AdventureWorks"
+                          },
+                          "schema": [],
+                          "externalReferences": {
+                            "connection": "6333018c-0ea5-4924-9c39-d81e55e2dbf0"
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "sink": {
+                        "type": "LakehouseTableSink",
+                        "tableActionOption": "OverwriteSchema",
+                        "partitionOption": "None",
+                        "datasetSettings": {
+                          "type": "LakehouseTable",
+                          "typeProperties": {
+                            "table": {
+                              "value": "@concat(item().DestinationSchema, '_', item().DestinationTableName)",
+                              "type": "Expression"
+                            }
+                          },
+                          "schema": [],
+                          "linkedService": {
+                            "properties": {
+                              "type": "Lakehouse",
+                              "typeProperties": {
+                                "artifactId": "dd4cbb4a-9806-4f8a-b0e3-cd39805491f1",
+                                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                                "rootFolder": "Tables"
+                              },
+                              "annotations": []
+                            },
+                            "name": "Raw_Data_Lakehouse"
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                          "allowDataTruncation": true,
+                          "treatBooleanAsNumber": false
+                        }
+                      },
+                      "enableStaging": false
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Copy data from System1 to Lakehouse",
+                    "dependsOn": [
+                      {
+                        "activity": "Log Start",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[AddExtractLogEntryEnd]",
+                      "storedProcedureParameters": {
+                        "EndTime": {
+                          "value": {
+                            "value": "@utcnow()",
+                            "type": "Expression"
+                          },
+                          "type": "DateTime"
+                        },
+                        "Outcome": {
+                          "value": "Success",
+                          "type": "String"
+                        },
+                        "TableName": {
+                          "value": {
+                            "value": "@concat(item().DestinationSchema, '_', item().DestinationTableName)",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e",
+                          "endpoint": "zkvnqmzj7bkuhj3byvnwfcpwgy-amnamum3bcvexb3raycdbda32u.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "51061a03-089b-4baa-8771-0604308c1bd5"
+                        },
+                        "annotations": []
+                      },
+                      "name": "Data Warehouse",
+                      "objectId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e"
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Log Success",
+                    "dependsOn": [
+                      {
+                        "activity": "Copy data from System1 to Lakehouse",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[AddExtractLogEntryStart]",
+                      "storedProcedureParameters": {
+                        "StartTime": {
+                          "value": {
+                            "value": "@utcnow()",
+                            "type": "Expression"
+                          },
+                          "type": "DateTime"
+                        },
+                        "TableName": {
+                          "value": {
+                            "value": "@concat(item().DestinationSchema, '_', item().DestinationTableName)",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e",
+                          "endpoint": "zkvnqmzj7bkuhj3byvnwfcpwgy-amnamum3bcvexb3raycdbda32u.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "51061a03-089b-4baa-8771-0604308c1bd5"
+                        },
+                        "annotations": []
+                      },
+                      "name": "Data Warehouse",
+                      "objectId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e"
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Log Start",
+                    "dependsOn": []
+                  },
+                  {
+                    "type": "SqlServerStoredProcedure",
+                    "typeProperties": {
+                      "storedProcedureName": "[audit].[AddExtractLogEntryEnd]",
+                      "storedProcedureParameters": {
+                        "EndTime": {
+                          "value": {
+                            "value": "@utcnow()",
+                            "type": "Expression"
+                          },
+                          "type": "DateTime"
+                        },
+                        "Outcome": {
+                          "value": "Failure",
+                          "type": "String"
+                        },
+                        "TableName": {
+                          "value": {
+                            "value": "@concat(item().DestinationSchema, '_', item().DestinationTableName)",
+                            "type": "Expression"
+                          },
+                          "type": "String"
+                        }
+                      }
+                    },
+                    "linkedService": {
+                      "properties": {
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                          "artifactId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e",
+                          "endpoint": "zkvnqmzj7bkuhj3byvnwfcpwgy-amnamum3bcvexb3raycdbda32u.datawarehouse.fabric.microsoft.com",
+                          "workspaceId": "51061a03-089b-4baa-8771-0604308c1bd5"
+                        },
+                        "annotations": []
+                      },
+                      "name": "Data Warehouse",
+                      "objectId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e"
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Log Failure",
+                    "dependsOn": [
+                      {
+                        "activity": "Copy data from System1 to Lakehouse",
+                        "dependencyConditions": [
+                          "Failed"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "ifFalseActivities": []
+              },
+              "name": "If Active equals true",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "For each System1 object load into lakehouse",
+        "dependsOn": [
+          {
+            "activity": "Lookup System1 Config",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

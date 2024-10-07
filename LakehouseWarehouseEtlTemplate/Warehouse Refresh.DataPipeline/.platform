@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Warehouse Refresh"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9904b763-1520-4c6b-90ad-3c95e5bbba46"
+  }
+}
