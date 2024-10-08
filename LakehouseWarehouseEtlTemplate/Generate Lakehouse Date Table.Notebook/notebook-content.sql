@@ -8,12 +8,12 @@
 -- META   },
 -- META   "dependencies": {
 -- META     "lakehouse": {
--- META       "default_lakehouse": "b6029f84-84ce-4786-943d-0dc72b3c8c55",
+-- META       "default_lakehouse": "0a92f641-fe6a-4293-99ea-ad514e3558f9",
 -- META       "default_lakehouse_name": "Raw_Data_Lakehouse",
--- META       "default_lakehouse_workspace_id": "51061a03-089b-4baa-8771-0604308c1bd5",
+-- META       "default_lakehouse_workspace_id": "a49cd675-fafc-4137-bc62-156f20a68c8c",
 -- META       "known_lakehouses": [
 -- META         {
--- META           "id": "b6029f84-84ce-4786-943d-0dc72b3c8c55"
+-- META           "id": "0a92f641-fe6a-4293-99ea-ad514e3558f9"
 -- META         }
 -- META       ]
 -- META     }
@@ -38,7 +38,7 @@ CREATE OR REPLACE TABLE generic_CalendarDates
 -- METADATA ********************
 
 -- META {
--- META   "language": "sparksql",
+-- META   "language": "sql",
 -- META   "language_group": "synapse_pyspark"
 -- META }
 
@@ -51,6 +51,6 @@ SELECT explode(sequence(to_date('2000-01-01'), to_date('2050-12-31'), interval 1
 -- METADATA ********************
 
 -- META {
--- META   "language": "sparksql",
+-- META   "language": "sql",
 -- META   "language_group": "synapse_pyspark"
 -- META }
