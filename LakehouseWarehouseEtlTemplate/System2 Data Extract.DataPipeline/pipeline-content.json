@@ -168,19 +168,6 @@
                         }
                       }
                     },
-                    "linkedService": {
-                      "properties": {
-                        "type": "DataWarehouse",
-                        "typeProperties": {
-                          "artifactId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e",
-                          "endpoint": "zkvnqmzj7bkuhj3byvnwfcpwgy-amnamum3bcvexb3raycdbda32u.datawarehouse.fabric.microsoft.com",
-                          "workspaceId": "51061a03-089b-4baa-8771-0604308c1bd5"
-                        },
-                        "annotations": []
-                      },
-                      "name": "Data Warehouse",
-                      "objectId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e"
-                    },
                     "policy": {
                       "timeout": "0.12:00:00",
                       "retry": 0,
@@ -219,19 +206,6 @@
                         }
                       }
                     },
-                    "linkedService": {
-                      "properties": {
-                        "type": "DataWarehouse",
-                        "typeProperties": {
-                          "artifactId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e",
-                          "endpoint": "zkvnqmzj7bkuhj3byvnwfcpwgy-amnamum3bcvexb3raycdbda32u.datawarehouse.fabric.microsoft.com",
-                          "workspaceId": "51061a03-089b-4baa-8771-0604308c1bd5"
-                        },
-                        "annotations": []
-                      },
-                      "name": "Data Warehouse",
-                      "objectId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e"
-                    },
                     "policy": {
                       "timeout": "0.12:00:00",
                       "retry": 0,
@@ -266,19 +240,6 @@
                           "type": "String"
                         }
                       }
-                    },
-                    "linkedService": {
-                      "properties": {
-                        "type": "DataWarehouse",
-                        "typeProperties": {
-                          "artifactId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e",
-                          "endpoint": "zkvnqmzj7bkuhj3byvnwfcpwgy-amnamum3bcvexb3raycdbda32u.datawarehouse.fabric.microsoft.com",
-                          "workspaceId": "51061a03-089b-4baa-8771-0604308c1bd5"
-                        },
-                        "annotations": []
-                      },
-                      "name": "Data Warehouse",
-                      "objectId": "46fd09fd-7b20-4a5f-9daf-7f0441e37f3e"
                     },
                     "policy": {
                       "timeout": "0.12:00:00",
